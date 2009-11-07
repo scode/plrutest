@@ -10,7 +10,7 @@
 (defn make
   [max-size]
   { :kvmap {}                ; key/value map of actual items
-    :rkmap (sorted-map)      ; recenticity -> [key, recenticity]
+    :rkmap (sorted-map)      ; recenticity -> [key]
     :krmap {}                ; key -> [recenticity]
     :size 0
     :max-size (asserting #(> %1 1) max-size "implementation breaks if less than 2"),
@@ -18,7 +18,7 @@
 
 (defn- remove-oldest
   [cache]
-  (let [[recenticity [key, _]] (first (:rkmap cache))]
+  (let [[recenticity key] (first (:rkmap cache))]
     (conj cache
           [:kvmap (dissoc (:kvmap cache) key)]
           [:rkmap (dissoc (:rkmap cache) recenticity)]
@@ -32,7 +32,7 @@
         new-kvmap (conj (:kvmap cache) [key value])
         new-size (if had-key (:size cache) (+ 1 (:size cache)))
         old-r (if had-key (get (:krmap cache) key) nil)
-        new-rkmap (let [with-new-added (conj (:rkmap cache) [(:mutation-counter cache) [key (:mutation-counter cache)]])]
+        new-rkmap (let [with-new-added (conj (:rkmap cache) [(:mutation-counter cache) key])]
                     (if old-r
                       (dissoc with-new-added (old-r 1))
                       with-new-added))
