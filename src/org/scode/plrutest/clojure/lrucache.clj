@@ -49,3 +49,17 @@
       (if should-remove
         (remove-oldest new-cache)
         new-cache))))
+
+(defn lru-get
+  [cache key]
+  (let [value ((:kvmap cache) key)]
+    (if (= nil value)
+      nil
+      (let [new-rkmap (conj (dissoc (:rkmap cache) ((:krmap cache) key)) [(:mutation-counter cache) key])
+            new-krmap (conj (dissoc (:krmap cache) key) [key (:mutation-counter cache)])
+            new-mutation-counter (+ 1 (:mutation-counter cache))]
+        [value (conj cache
+                     [:rkmap new-rkmap]
+                     [:krmap new-krmap]
+                     [:mutation-counter new-mutation-counter])]))))
+
