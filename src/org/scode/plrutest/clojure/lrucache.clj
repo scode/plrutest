@@ -31,7 +31,7 @@
         should-remove (and (not had-key) (>= (:size cache) (:max-size cache)))
         new-kvmap (conj (:kvmap cache) [key value])
         new-size (if had-key (:size cache) (+ 1 (:size cache)))
-        old-r (if had-key (get (:krmap cache) key) nil)
+        old-r (if had-key ((:krmap cache) key) nil)
         new-rkmap (let [with-new-added (conj (:rkmap cache) [(:mutation-counter cache) key])]
                     (if old-r
                       (dissoc with-new-added (old-r 1))
