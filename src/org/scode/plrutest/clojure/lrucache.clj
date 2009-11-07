@@ -11,7 +11,7 @@
   [max-size]
   { :kvmap {}                ; key/value map of actual items
     :rkmap (sorted-map)      ; recenticity -> key
-    :krmap {}                ; key -> [recenticity]
+    :krmap {}                ; key -> recenticity
     :size 0
     :max-size (asserting #(> %1 1) max-size "implementation breaks if less than 2"),
     :mutation-counter 0 })
