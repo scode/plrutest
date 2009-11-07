@@ -7,7 +7,7 @@
      (assert (ok? val))
      val))
 
-(defn make
+(defn lru-make
   [max-size]
   { :kvmap {}                ; key/value map of actual items
     :rkmap (sorted-map)      ; recenticity -> key
@@ -25,7 +25,7 @@
           [:krmap (dissoc (:krmap cache) key)]
           [:size (- (:size cache) 1)])))
 
-(defn put
+(defn lru-put
   [cache key value]
   (assert (not (= nil value))) ; nil is not supported
 
