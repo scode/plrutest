@@ -27,6 +27,8 @@
 
 (defn put
   [cache key value]
+  (assert (not (= nil value))) ; nil is not supported
+
   (let [had-key (contains? (:kvmap cache) key)
         should-remove (and (not had-key) (>= (:size cache) (:max-size cache)))
         new-kvmap (conj (:kvmap cache) [key value])
