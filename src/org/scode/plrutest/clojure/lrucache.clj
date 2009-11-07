@@ -36,7 +36,7 @@
         old-r (if had-key ((:krmap cache) key) nil)
         new-rkmap (let [with-new-added (conj (:rkmap cache) [(:mutation-counter cache) key])]
                     (if old-r
-                      (dissoc with-new-added (old-r 1))
+                      (dissoc with-new-added old-r)
                       with-new-added))
         new-krmap (conj (:krmap cache) [key (:mutation-counter cache)])
         new-mutation-counter (+ 1 (:mutation-counter cache))]
