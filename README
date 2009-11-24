@@ -1,0 +1,2 @@
+Some code to experiment with the behavior of GC in the face of LRU
+style allocation pattern.
