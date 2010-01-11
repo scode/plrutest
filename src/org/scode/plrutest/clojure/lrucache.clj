@@ -7,7 +7,7 @@
      (assert (ok? val))
      val))
 
-(defn lru-make
+(defn make-lru
   [max-size]
   { :kvmap {}                ; key/value map of actual items
     :rkmap (sorted-map)      ; recenticity -> key
@@ -55,7 +55,7 @@
      (lru-get cache key nil))
   ([cache key not-found]
      (let [not-found-sym (gensym)
-           value ((get cache :kvmap key not-found-sym))]
+           value (get cache :kvmap not-found-sym)]
        (if (= value not-found-sym)
          not-found
          (let [new-rkmap (conj (dissoc (:rkmap cache) ((:krmap cache) key)) [(:mutation-counter cache) key])
