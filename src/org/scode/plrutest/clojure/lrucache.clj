@@ -1,8 +1,10 @@
 (ns org.scode.plrutest.clojure.lrucache)
 
-(defn- asserting
+(defn- guaranteeing
+  "Guarantees (by asserting) that (ok? val) evaluates to true, then
+   returns val."
   ([ok? val reason]
-     (asserting ok? val))
+     (guaranteeing ok? val))
   ([ok? val]
      (assert (ok? val))
      val))
@@ -13,7 +15,7 @@
     :rkmap (sorted-map)      ; recenticity -> key
     :krmap {}                ; key -> recenticity
     :size 0
-    :max-size (asserting #(> %1 1) max-size "implementation breaks if less than 2"),
+    :max-size (guaranteeing #(> %1 1) max-size "implementation breaks if less than 2"),
     :mutation-counter 0 })
 
 (defn- remove-oldest
