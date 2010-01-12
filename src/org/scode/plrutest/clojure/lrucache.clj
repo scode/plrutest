@@ -1,4 +1,7 @@
-(ns org.scode.plrutest.clojure.lrucache)
+(ns
+  #^{:author "Peter Schuller <peter.schuller@infidyne.com>",
+     :doc "A persistent LRU (Least-Recently-Used) cache."}
+  org.scode.plrutest.clojure.lrucache)
 
 (defn- guaranteeing
   "Guarantees (by asserting) that (ok? val) evaluates to true, then
@@ -10,6 +13,9 @@
      val))
 
 (defn make-lru
+  "Create an empty LRU cache with the given maximum size. The maximum
+   size determines when entries are evicted from the cache to make
+   room for new ones."
   [max-size]
   { :kvmap {}                ; key/value map of actual items
     :rkmap (sorted-map)      ; recenticity -> key
@@ -28,6 +34,10 @@
           [:size (- (:size cache) 1)])))
 
 (defn lru-put
+  "Returns a new cache with the given value inserted, associated with
+   the given key. If t he cache is full, the returned cache will be
+   missing the least recently used entry already contained in the
+   cache."
   [cache key value]
   (assert (not (= nil value))) ; nil is not supported
 
@@ -53,6 +63,14 @@
         new-cache))))
 
 (defn lru-get
+  "Returns [value new-cache], where new-cache is a new cache with its
+   internal statistics updated to reflect the fact the the value
+   associated with the given key was accessed (i.e., it is the most
+   recently used entry in the cache).
+
+   The optional parameter not-found is the object that will be
+   returned if there is no entry in the cache by the given key. If not
+   given, the default is nil."
   ([cache key]
      (lru-get cache key nil))
   ([cache key not-found]
@@ -69,6 +87,9 @@
                         [:mutation-counter new-mutation-counter])])))))
 
 (defn lru-peak
+  "Like lru-get except it only returns the value obtained, and makes
+   no attempt to create a new cache reflecting the access in its
+   internal data structure."
   ([cache key]
      (lru-peak cache key nil))
   ([cache key not-found]
